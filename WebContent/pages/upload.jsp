@@ -23,18 +23,14 @@
 
 		reader.onloadend = function() {
 			target.src = reader.result;
-		};
-
-		if (file) {
-			reader.readAsDataURL(file);
-
+			
 			///----- upload ajax ---------
 
 			$.ajax({
 				method : "POST",
 				url : "fileUpload",
 				data : {
-					fileUpload : target.src
+					fileUpload : reader.result
 				}
 			}).done(function(response) {
 				alert("sucesso" + response);
@@ -45,6 +41,11 @@
 			});
 
 			///---------------------------
+		};
+
+		if (file) {
+			reader.readAsDataURL(file);
+
 		} else {
 			target.src = "";
 		}
