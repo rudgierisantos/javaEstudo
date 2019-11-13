@@ -56,26 +56,30 @@ public class DaoUsuario {
 
 		}
 	}
-	
-	public void gravarImagem(String fileUpload) throws Exception{
-		String sql = "insert into usuario (fotobase64)"
-				+ "values (?)";
-		PreparedStatement insert = connection.prepareStatement(sql);
+
+	public void gravarImagem(String fileUpload) throws Exception {
 		
+		String tipoDados = fileUpload.split(",")[0].split(";")[0].split("/")[1];
+		
+		String sql = "insert into usuario (fotobase64, contenttype)" + "values (?,?)";
+		PreparedStatement insert = connection.prepareStatement(sql);
+
 		insert.setString(1, fileUpload);
+		insert.setString(2, tipoDados);
 		insert.execute();
 		connection.commit();
-		
-		
+
 	}
-	
-	public List<BeanCursoJsp>  listar(String descricaoconsulta) throws SQLException{
-		String sql = "select * from usuario where login <> 'admin' and nome like '%"+descricaoconsulta+"%'";
-	    return consultarUsuarios(sql);
+
+	public List<BeanCursoJsp> listar(String descricaoconsulta)
+			throws SQLException {
+		String sql = "select * from usuario where login <> 'admin' and nome like '%"
+				+ descricaoconsulta + "%'";
+		return consultarUsuarios(sql);
 	}
 
 	public List<BeanCursoJsp> listar() throws Exception {
-		String sql = "select * from usuario where login <> 'admin' ";
+		String sql = "select * from usuario  ";
 		return consultarUsuarios(sql);
 
 	}
@@ -98,7 +102,7 @@ public class DaoUsuario {
 			beanCursoJsp.setEstado(resultSet.getString("estado"));
 			beanCursoJsp.setIbge(resultSet.getString("ibge"));
 			beanCursoJsp.setContentType(resultSet.getString("contenttype"));
-			// beanCursoJsp.setFotoBase64(resultSet.getString("fotobase64"));
+			beanCursoJsp.setFotoBase64(resultSet.getString("fotobase64"));
 			beanCursoJsp.setFotoBase64Miniatura(resultSet
 					.getString("fotobase64miniatura"));
 			beanCursoJsp.setCurriculoBase64(resultSet
@@ -111,7 +115,7 @@ public class DaoUsuario {
 			listar.add(beanCursoJsp);
 
 		}
-		
+
 		return listar;
 	}
 
@@ -287,4 +291,32 @@ public class DaoUsuario {
 		}
 
 	}
+
+	public BeanCursoJsp buscaImagem(String iduser) {
+
+		try {
+			String sql = "select * from usuario where id = " + iduser;
+
+			PreparedStatement buscaImagem;
+			buscaImagem = connection.prepareStatement(sql);
+
+			ResultSet resultSet = buscaImagem.executeQuery();
+			while (resultSet.next()) {
+				BeanCursoJsp beanCursoJsp = new BeanCursoJsp();
+				beanCursoJsp.setId(resultSet.getLong("id"));
+				beanCursoJsp.setLogin(resultSet.getString("login"));
+				beanCursoJsp.setSenha(resultSet.getString("senha"));
+				beanCursoJsp.setFotoBase64(resultSet.getString("fotobase64"));
+				beanCursoJsp.setContentType(resultSet.getString("contenttype"));
+				
+				
+				return beanCursoJsp;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
 }
