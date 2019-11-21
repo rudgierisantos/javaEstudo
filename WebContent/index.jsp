@@ -45,6 +45,11 @@
 	
 	</tr>
 	
+		<tr>
+	<td><a href="pages/calendar.jsp">Calendário</a></td>
+	
+	</tr>
+	
 	<tr>
 	<td><a href="pages/ServletAutenticacao?deslogar=true">Deslogar</a></td>
 	
